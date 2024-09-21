@@ -4,35 +4,25 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float horizontalInput;
-    public float verticalInput;
-    public float moveSpeed;
-    public float sprintSpeed;
-    public float rotationSpeed;
-    // Start is called before the first frame update
+    [SerializeField] float playerWalkSpeed;
+    [SerializeField] float playerRunSpeed;
+    [SerializeField] Rigidbody2D rb;
+    
+
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-
-        verticalInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-
-        transform.Translate(Vector2.up * verticalInput * moveSpeed * Time.deltaTime * sprintSpeed);
-        transform.Rotate(Vector3.back * horizontalInput * rotationSpeed * Time.deltaTime);
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            sprintSpeed = 1.5f;
+            rb.AddForce((Vector2.up * Input.GetAxisRaw("Vertical") + Vector2.right * Input.GetAxisRaw("Horizontal")).normalized * playerRunSpeed * (1000));
         }
-
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else
         {
-            sprintSpeed = 1;
+            rb.AddForce((Vector2.up * Input.GetAxisRaw("Vertical") + Vector2.right * Input.GetAxisRaw("Horizontal")).normalized * playerWalkSpeed * (1000));
         }
     }
 }
